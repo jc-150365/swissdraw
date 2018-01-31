@@ -28,12 +28,27 @@ namespace SwissDraw.Tests
             persons.Add(5, new Person { LotNumber = 5, PersonGroup = "B", PersonName = "尾堂" });
             persons.Add(6, new Person { LotNumber = 6, PersonGroup = "C", PersonName = "加藤" });
 
+            //1回戦
             Match[] matches = Match.MakeMatch(persons, new Match[0]);
             Assert.AreEqual(3, matches.Length);
             Assert.AreEqual(1, matches[0].Person1);
-            Assert.AreEqual(4, matches[0].Person2);
-            matches[0].Result = 1;
+            Assert.AreEqual(4, matches[0].Person2);//1 vs 4
+            Assert.AreEqual(2, matches[1].Person1);
+            Assert.AreEqual(5, matches[1].Person2);//2 vs 5
+            Assert.AreEqual(3, matches[2].Person1);
+            Assert.AreEqual(6, matches[2].Person2);//3 vs 6
 
+            matches[0].Result = 1;// 1が勝つ
+            matches[1].Result = 2;// 5が勝つ
+            matches[2].Result = 2;//6が勝つ
+
+            
+            Match[] matches2 = Match.MakeMatch(persons, matches);
+            Assert.IsNotNull(matches2);
+            Assert.AreEqual(3, matches2.Length);
+            Assert.AreEqual(1, matches2[0].Person1);
+            Assert.AreEqual(5, matches2[0].Person2);
+            
 
         }
 
@@ -52,11 +67,7 @@ namespace SwissDraw.Tests
 
             var result2 = Match.MergeMatch(matches1, matches2);
             Assert.AreEqual(3, result2.Length);
-
-
-
         }
-
 
         /////////  独自に追加したメソッド
         [TestMethod()]
@@ -213,7 +224,6 @@ namespace SwissDraw.Tests
 
         }
 
-
         [TestMethod()]
         public void getVersusKey1Test()
         {
@@ -224,10 +234,105 @@ namespace SwissDraw.Tests
             persons.Add(4, new Person { LotNumber = 4, PersonGroup = "B", PersonName = "遠藤" });
             persons.Add(5, new Person { LotNumber = 5, PersonGroup = "B", PersonName = "尾堂" });
             persons.Add(6, new Person { LotNumber = 6, PersonGroup = "C", PersonName = "加藤" });
+
             int[] keys = Match.GetKeyArray(persons);
             int[][] SplittedKeys = Match.splitPersons(persons, new Match[0]);
             var result = Match.getVersusKey1(1, SplittedKeys, new Match[0], persons, new Match[0]);
             Assert.AreEqual(4, result);
+            
+        }
+
+        [TestMethod()]
+        public void getVersusKey100Test()
+        {
+            Dictionary<int, Person> persons = new Dictionary<int, Person>();
+            persons.Add(1, new Person { LotNumber = 1, PersonGroup = "A", PersonName = "安藤" });
+            persons.Add(2, new Person { LotNumber = 2, PersonGroup = "A", PersonName = "伊藤" });
+            persons.Add(3, new Person { LotNumber = 3, PersonGroup = "A", PersonName = "有働" });
+            persons.Add(4, new Person { LotNumber = 4, PersonGroup = "B", PersonName = "遠藤" });
+            persons.Add(5, new Person { LotNumber = 5, PersonGroup = "B", PersonName = "尾堂" });
+            persons.Add(6, new Person { LotNumber = 6, PersonGroup = "C", PersonName = "加藤" });
+
+            int[] keys = Match.GetKeyArray(persons);
+            int[][] SplittedKeys = Match.splitPersons(persons, new Match[0]);
+            var result = Match.getVersusKey1(1, SplittedKeys, new Match[0], persons, new Match[0]);
+            Assert.AreEqual(4, result);
+
+        }
+
+        [TestMethod()]
+        public void MakeMatch1Test()
+        {
+            Dictionary<int, Person> persons = new Dictionary<int, Person>();
+
+            persons.Add(1, new Person { LotNumber = 1, PersonGroup = "A", PersonName = "安藤" });
+            persons.Add(2, new Person { LotNumber = 2, PersonGroup = "A", PersonName = "伊藤" });
+            persons.Add(3, new Person { LotNumber = 3, PersonGroup = "A", PersonName = "有働" });
+            persons.Add(4, new Person { LotNumber = 4, PersonGroup = "B", PersonName = "遠藤" });
+            persons.Add(5, new Person { LotNumber = 5, PersonGroup = "B", PersonName = "尾堂" });
+            persons.Add(6, new Person { LotNumber = 6, PersonGroup = "C", PersonName = "加藤" });
+
+            Match[] result =  new Match[0];
+
+
+            // personsのkeyのみ取り出す
+            int[] keys = Match.GetKeyArray(persons);
+
+            // 配列を初期化する
+            int matchCount = keys.Length / 2;
+
+            int[][] SplittedKeys = Match.splitPersons(persons, result);
+
+            Match[] matches2 = Match.MakeMatch1(matchCount, SplittedKeys, persons, result);
+            Assert.IsNotNull(matches2);
+            Assert.AreEqual(3, matches2.Length);
+            Assert.AreEqual(1, matches2[0].Person1);
+            Assert.AreEqual(4, matches2[0].Person2);
+            Assert.AreEqual(2, matches2[1].Person1);
+            Assert.AreEqual(5, matches2[1].Person2);
+
+
+
+
+        }
+
+        [TestMethod()]
+        public void MakeMatch2Test()
+        {
+            Dictionary<int, Person> persons = new Dictionary<int, Person>();
+
+            persons.Add(1, new Person { LotNumber = 1, PersonGroup = "A", PersonName = "安藤" });
+            persons.Add(2, new Person { LotNumber = 2, PersonGroup = "A", PersonName = "伊藤" });
+            persons.Add(3, new Person { LotNumber = 3, PersonGroup = "A", PersonName = "有働" });
+            persons.Add(4, new Person { LotNumber = 4, PersonGroup = "B", PersonName = "遠藤" });
+            persons.Add(5, new Person { LotNumber = 5, PersonGroup = "B", PersonName = "尾堂" });
+            persons.Add(6, new Person { LotNumber = 6, PersonGroup = "C", PersonName = "加藤" });
+
+            Match[] result = new Match[3];
+            result[0] = new Match(1, 4);
+            result[0].Result = 1;
+            result[1] = new Match(2, 5);
+            result[1].Result = 2;
+            result[2] = new Match(3, 6);
+            result[2].Result = 2;
+
+
+            // personsのkeyのみ取り出す
+            int[] keys = Match.GetKeyArray(persons);
+
+            // 配列を初期化する
+            int matchCount = keys.Length / 2;
+
+            int[][] SplittedKeys = Match.splitPersons(persons, result);
+
+            Match[] matches1 = Match.MakeMatch1(matchCount, SplittedKeys, persons, result);
+            Assert.IsNull(matches1);
+
+            Match[] matches2 = Match.MakeMatch2(matchCount, SplittedKeys, persons, result);
+            Assert.IsNotNull(matches2);
+
+
+
 
 
         }
