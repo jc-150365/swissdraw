@@ -18,8 +18,9 @@ namespace SwissDraw.Tests
         }
 
         [TestMethod()]
-        public void MakeMatchTest()
+        public void MakeMatchTest01()
         {
+            //参加者
             Dictionary<int, Person> persons = new Dictionary<int, Person>();
             persons.Add(1, new Person { LotNumber = 1, PersonGroup = "A", PersonName = "安藤" });
             persons.Add(2, new Person { LotNumber = 2, PersonGroup = "A", PersonName = "伊藤" });
@@ -42,14 +43,84 @@ namespace SwissDraw.Tests
             matches[1].Result = 2;// 5が勝つ
             matches[2].Result = 2;//6が勝つ
 
-            
+            //2回戦
             Match[] matches2 = Match.MakeMatch(persons, matches);
             Assert.IsNotNull(matches2);
             Assert.AreEqual(3, matches2.Length);
             Assert.AreEqual(1, matches2[0].Person1);
-            Assert.AreEqual(5, matches2[0].Person2);
-            
+            Assert.AreEqual(5, matches2[0].Person2);//1 vs 5
+            Assert.AreEqual(6, matches2[1].Person1);
+            Assert.AreEqual(2, matches2[1].Person2);//2 vs 6
+            Assert.AreEqual(3, matches2[2].Person1);
+            Assert.AreEqual(4, matches2[2].Person2);//3 vs 4
 
+            matches2[0].Result = 1;//1が勝つ
+            matches2[1].Result = 1;//6が勝つ
+            matches2[2].Result = 1;//3が勝つ
+
+            //3回戦
+            Match[] matches3 = Match.MakeMatch(persons, matches2);
+            Assert.IsNotNull(matches3);
+            Assert.AreEqual(3, matches3.Length);
+            Assert.AreEqual(1, matches3[0].Person1);
+            Assert.AreEqual(6, matches3[0].Person2);//1 vs 6
+            Assert.AreEqual(3, matches3[1].Person1);
+            Assert.AreEqual(5, matches3[1].Person2);//3 vs 5
+            Assert.AreEqual(2, matches3[2].Person1);
+            Assert.AreEqual(4, matches3[2].Person2);//2 vs 4
+        }
+
+        [TestMethod()]
+        public void MakeMatchTest02()
+        {
+            //参加者
+            Dictionary<int, Person> persons = new Dictionary<int, Person>();
+            persons.Add(1, new Person { LotNumber = 1, PersonGroup = "A", PersonName = "安藤" });
+            persons.Add(2, new Person { LotNumber = 2, PersonGroup = "A", PersonName = "伊藤" });
+            persons.Add(3, new Person { LotNumber = 3, PersonGroup = "A", PersonName = "有働" });
+            persons.Add(4, new Person { LotNumber = 4, PersonGroup = "B", PersonName = "遠藤" });
+            persons.Add(5, new Person { LotNumber = 5, PersonGroup = "B", PersonName = "尾堂" });
+            persons.Add(6, new Person { LotNumber = 6, PersonGroup = "C", PersonName = "加藤" });
+
+            //1回戦
+            Match[] matches = Match.MakeMatch(persons, new Match[0]);
+            Assert.AreEqual(3, matches.Length);
+            Assert.AreEqual(1, matches[0].Person1);
+            Assert.AreEqual(4, matches[0].Person2);//1 vs 4
+            Assert.AreEqual(2, matches[1].Person1);
+            Assert.AreEqual(5, matches[1].Person2);//2 vs 5
+            Assert.AreEqual(3, matches[2].Person1);
+            Assert.AreEqual(6, matches[2].Person2);//3 vs 6
+
+            matches[0].Result = 1;//1が勝つ
+            matches[1].Result = 2;//5が勝つ
+            matches[2].Result = 2;//6が勝つ
+
+            //2回戦
+            Match[] matches2 = Match.MakeMatch(persons, matches);
+            Assert.IsNotNull(matches2);
+            Assert.AreEqual(3, matches2.Length);
+            Assert.AreEqual(1, matches2[0].Person1);
+            Assert.AreEqual(5, matches2[0].Person2);//1 vs 5
+            Assert.AreEqual(6, matches2[1].Person1);
+            Assert.AreEqual(2, matches2[1].Person2);//2 vs 6
+            Assert.AreEqual(3, matches2[2].Person1);
+            Assert.AreEqual(4, matches2[2].Person2);//3 vs 4
+
+            matches2[0].Result = 2;//5が勝つ
+            matches2[1].Result = 2;//2が勝つ
+            matches2[2].Result = 1;//3が勝つ
+
+            //3回戦
+            Match[] matches3 = Match.MakeMatch(persons, matches2);
+            Assert.IsNotNull(matches3);
+            Assert.AreEqual(3, matches3.Length);
+            Assert.AreEqual(3, matches3[0].Person1);
+            Assert.AreEqual(5, matches3[0].Person2);//3 vs 5
+            Assert.AreEqual(1, matches3[1].Person1);
+            Assert.AreEqual(6, matches3[1].Person2);//1 vs 6
+            Assert.AreEqual(2, matches3[2].Person1);
+            Assert.AreEqual(4, matches3[2].Person2);//2 vs 4
         }
 
         [TestMethod()]
